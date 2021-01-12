@@ -10,8 +10,9 @@ class FourFun(commands.Cog, MemesScrapy.MemeWinTrade):
     def __init__(self, client):
         super().__init__()
         self.client = client
+        self.logo = '🎉'
 
-    @commands.command(name='wanted?')
+    @commands.command(name='wanted?', help='verify that you are wanted', usage='>wanted?')
     async def wanted(self, ctx, user: discord.Member = None):
         if user is None:
             user = ctx.author

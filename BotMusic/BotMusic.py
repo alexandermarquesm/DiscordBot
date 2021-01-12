@@ -80,10 +80,6 @@ class Player(Queue, YoutubeSearch):
         song.streams.get_by_itag(251).download()
 
     async def embed_song(self, bot):
-        song_title = self.data_current['data_song']['title']
-        activity = discord.Activity(name=song_title, type=discord.ActivityType.listening)
-        await self.client.change_presence(activity=activity)
-
         embedsong = discord.Embed(title=f':musical_note: `{self.data_current.get("data_song")["title"]}`',
                                   color=0xf5dc00, url=self.data_current.get("data_song")["url"])
         embedsong.set_thumbnail(url=self.data_current.get("data_song")['thumb'])

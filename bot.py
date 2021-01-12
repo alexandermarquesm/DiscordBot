@@ -1,10 +1,10 @@
-import discord
 import os
-from discord.ext import commands
 from dotenv import load_dotenv
+from discord.ext import commands
 
 
 client = commands.Bot(command_prefix='>', help_command=None)
+
 load_dotenv()
 
 

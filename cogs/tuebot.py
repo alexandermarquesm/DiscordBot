@@ -1,3 +1,4 @@
+import discord
 from discord.ext import commands
 from BotMusic.BotMusic import Player
 
@@ -9,8 +10,9 @@ class TueBot(commands.Cog, Player):
     def __init__(self, client):
         super().__init__(client)
         self.context_dj = None
+        self.logo = '🤖'
 
-    @commands.command(name='song')
+    @commands.command(name='song', brief='>song')
     async def song_now(self, ctx):
         try:
             song_now = self.data_current["data_song"]["title"]
@@ -117,13 +119,41 @@ class TueBot(commands.Cog, Player):
 
     @commands.command(name='ping')
     async def ping(self, ctx):
-      await ctx.send('Pong! {0:.0f}'.format((self.client.latency * 1100)))
+        await ctx.send('Pong! {0:.0f}'.format((self.client.latency * 1100)))
 
     @commands.command(name='help')
-    async def help_func(self, ctx):
-        print(dir(self.client))
-        for c in self.client.all_commands:
-            print(c)
+    async def too_command(self, ctx, *command: str):
+        if command:
+            command = command[0]
+            comm = self.client.get_command(command)
+            embed = discord.Embed(
+                title=command,
+                description=comm.help,
+            )
+            for arg in comm.__original_kwargs__:
+                embed.add_field(name=arg.capitalize(), value=f'`{comm.__original_kwargs__[arg]}`', inline=False)
+            # fazer um for para adicionar os parametros das funçoes a cada laço
+            # ex: aliases, brief, usage, help,
+            await ctx.send(embed=embed)
+        else:
+            embed = discord.Embed(
+                title='Important link:',
+                description='[TradingView](https://br.tradingview.com/symbols/BTCUSD/ "open TradingView Website")'
+                            ' | [CoinMarketCap](https://coinmarketcap.com/ "open CoinMarketCap Website")'
+                            ' | [ForDenise](https://www.youtube.com/watch?v=hH9M-m3WD0g)'
+            )
+            embed.set_author(name='📖 | Help Commands')
+
+            for cog in self.client.cogs:
+                if cog == 'CommandEvents':
+                    continue
+                comandos = ''
+                for c in self.client.cogs[cog].walk_commands():
+                    comandos += f'`{c}` | '
+                embed.add_field(name=f'{self.client.get_cog(cog).logo} {cog}', value=comandos, inline=False)
+
+            embed.set_footer(text='to get more info on commands >help [command]')
+            await ctx.send(embed=embed)
 
 
 def setup(client):
