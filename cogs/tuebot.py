@@ -12,7 +12,7 @@ class TueBot(commands.Cog, Player):
         self.context_dj = None
         self.logo = '🤖'
 
-    @commands.command(name='song', brief='>song')
+    @commands.command(name='song', help='show the song that is playing now', usage='>song')
     async def song_now(self, ctx):
         try:
             song_now = self.data_current["data_song"]["title"]
@@ -21,7 +21,7 @@ class TueBot(commands.Cog, Player):
             await ctx.send('Queue Empty')
 
     @commands.has_permissions(manage_messages=True)
-    @commands.command(name='search')
+    @commands.command(name='search', help='shows the first 5 songs searched', usage='>search [song name]')
     async def search_song(self, ctx, *, search):
         self.context_dj = ctx
         user_connected = ctx.author.voice
@@ -34,13 +34,15 @@ class TueBot(commands.Cog, Player):
         else:
             await ctx.send("You're not connected")
 
-    @commands.command(name='join', help='O bot entra na sala LUL')
+    @commands.command(name='join', help='enter the voice chat that the user is connected to', usage='>join')
     async def join(self, ctx):
         await ctx.message.delete()
         channel = ctx.message.author.voice.channel
         await channel.connect()
 
-    @commands.command(name='play', aliases=['p', 'P', 'pl', 'ple', 'pley'], help='Comando para por musica ex: >play link')
+    @commands.command(name='play', aliases=['p', 'P', 'pl', 'ple', 'pley'],
+                      help='command to play a song directly from youtube',
+                      usage='>play [song name or link]')
     async def play(self, ctx, *, link):
 
         if link not in 'youtube.com':
@@ -61,12 +63,12 @@ class TueBot(commands.Cog, Player):
             await self.add_links(link)
             self.play_song(ctx)
 
-    @commands.command(name='shuffle', help='randomizar a playlist')
+    @commands.command(name='shuffle', help='randomizes the playlist', usage='>shuffle')
     async def shuffle(self, ctx):
         self.shuffle_()
         await ctx.send('Shuffled :twisted_rightwards_arrows:')
 
-    @commands.command(name='leave', help='Comando para o bot sair do canal')
+    @commands.command(name='leave', help='bot leave the voice channel', usage='>leave')
     async def leave(self, ctx):
         try:
             await ctx.voice_client.disconnect()
@@ -76,38 +78,39 @@ class TueBot(commands.Cog, Player):
         except AttributeError:
             await ctx.send('Eu não to conectado sua putinha ')
 
-    @commands.command(name='pause', help='Pausa a musica se estiver tocando *não me diga*')
+    @commands.command(name='pause', help='pause the song if playing', usage='>pause')
     async def pause(self, ctx):
         ctx.voice_client.pause()
 
-    @commands.command(name='resume', help='Tira o pause do bot')
+    @commands.command(name='resume', help='unpause the music', usage='>resume')
     async def resume(self, ctx):
         ctx.voice_client.resume()
 
-    @commands.command(name='next')
+    @commands.command(name='next', help='advances to the next song', usage='>next')
     async def next(self, ctx):
         vc = ctx.voice_client
         vc.stop()
 
-    @commands.command(name='repeat')
+    @commands.command(name='repeat', help='repeat the current song', usage='>repeat')
     async def reapeat(self, ctx):
         self.index -= 1
         await ctx.send('Song will repeat 🔁')
 
-    @commands.command(name='previus')
+    @commands.command(name='previous', help='play the previous song', usage='>previous')
     async def prev(self, ctx):
         self.index -= 2
         if self.index < 0:
             self.index = 0
         await self.next(ctx)
 
-    @commands.command(name='stop')
+    @commands.command(name='stop', help='finish playing the playlist or the song if it is playing', usage='>stop')
     async def stop(self, ctx):
         self.index = 0
         self.queue.clear()
 
     @commands.has_permissions(manage_messages=True)
-    @commands.command(name='clear')
+    @commands.command(name='clear', help='clears x amount of messages on the channel',
+                      usage='>clear [amout] -> limit = 10')
     async def clear_message(self, ctx, limit: Optional[int] = 1):
         if 0 < limit <= 100:
             with ctx.channel.typing():
@@ -123,6 +126,7 @@ class TueBot(commands.Cog, Player):
 
     @commands.command(name='help')
     async def too_command(self, ctx, *command: str):
+        # ipdb.set_trace()
         if command:
             command = command[0]
             comm = self.client.get_command(command)

@@ -32,7 +32,7 @@ class FourFun(commands.Cog, MemesScrapy.MemeWinTrade):
         await ctx.send(file=discord.File('profile.jpg'))
 
     @commands.has_permissions(manage_messages=True)
-    @commands.command(name='tag')
+    @commands.command(name='tag', help='get a random reddit meme', usage='>tag')
     async def reddit_tag(self, ctx, *tag):
         if tag:
             tag = tag[0]
@@ -40,7 +40,7 @@ class FourFun(commands.Cog, MemesScrapy.MemeWinTrade):
             tag = 'meme'
         await ctx.send(self.get_random_meme(tag), delete_after=2)
 
-    @commands.command(name='ÉOPAPI', help='Comando que consiste em mostrar a formatura do papi KEKW')
+    @commands.command(name='ÉOPAPI', help='Comando que consiste em mostrar a formatura do papi KEKW', usage='>ÉOPAPI')
     async def papi(self, ctx):
         await ctx.send('https://media.discordapp.net/attachments/532609612420087828/784573727554666501/aham.png')
 
@@ -51,12 +51,12 @@ class FourFun(commands.Cog, MemesScrapy.MemeWinTrade):
               'Tem CÁS tentro 🥤', 'Cás? 🥤', 'BUCETEIRO DE MERDA MESMO 🤮']
         await message.send(choice(op))
 
-    @commands.command(name='rolladice', help='Rodar um dado :LUL:')
+    @commands.command(name='rolladice', aliases=['rd', 'dado'], help='Rodar um dado :LUL:', usage='>rolladice')
     async def roll(self, ctx):
         number = randint(0, 9)
         await ctx.send(f'Caiu no número {number}')
 
-    @commands.command(name='rir', help='Commando que vai rir por você LUL')
+    @commands.command(name='rir', help='Commando que vai rir por você LUL', usage='>rir')
     async def rir(self, ctx):
         risada = 100 * 'K'
         await ctx.send(risada)
